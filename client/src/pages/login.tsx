@@ -28,7 +28,7 @@ export default function Login() {
         title: 'Login successful',
         description: `Welcome back, ${user.name}!`,
       });
-      setLocation('/dashboard');
+      setTimeout(() => setLocation('/dashboard'), 0);
     },
     onError: (error: Error) => {
       toast({

@@ -62,20 +62,22 @@ function Router() {
           </header>
           <main className="flex-1 overflow-auto p-6 md:p-8">
             <Switch>
-              <Route path="/" component={() => <Redirect to="/dashboard" />} />
-              <Route path="/dashboard" component={() => <ProtectedRoute component={Dashboard} />} />
-              <Route path="/leads" component={() => <ProtectedRoute component={LeadsList} />} />
-              <Route path="/leads/new" component={() => <ProtectedRoute component={LeadForm} />} />
-              <Route path="/leads/:id" component={() => <ProtectedRoute component={LeadDetail} />} />
-              <Route path="/leads/:id/edit" component={() => <ProtectedRoute component={LeadForm} />} />
-              <Route path="/clients" component={() => <ProtectedRoute component={ClientsList} />} />
-              <Route path="/clients/:id" component={() => <ProtectedRoute component={ClientDetail} />} />
-              <Route path="/quotations" component={() => <ProtectedRoute component={QuotationsList} />} />
-              <Route path="/quotations/new" component={() => <ProtectedRoute component={QuotationForm} />} />
-              <Route path="/quotations/:id" component={() => <ProtectedRoute component={QuotationDetail} />} />
-              <Route path="/quotations/:id/edit" component={() => <ProtectedRoute component={QuotationForm} />} />
-              <Route path="/invoices" component={() => <ProtectedRoute component={InvoicesList} />} />
-              <Route path="/tickets" component={() => <ProtectedRoute component={TicketsList} />} />
+              <Route path="/">
+                <Redirect to="/dashboard" />
+              </Route>
+              <Route path="/dashboard" component={Dashboard} />
+              <Route path="/leads" component={LeadsList} />
+              <Route path="/leads/new" component={LeadForm} />
+              <Route path="/leads/:id/edit" component={LeadForm} />
+              <Route path="/leads/:id" component={LeadDetail} />
+              <Route path="/clients/:id" component={ClientDetail} />
+              <Route path="/clients" component={ClientsList} />
+              <Route path="/quotations/new" component={QuotationForm} />
+              <Route path="/quotations/:id/edit" component={QuotationForm} />
+              <Route path="/quotations/:id" component={QuotationDetail} />
+              <Route path="/quotations" component={QuotationsList} />
+              <Route path="/invoices" component={InvoicesList} />
+              <Route path="/tickets" component={TicketsList} />
               <Route component={NotFound} />
             </Switch>
           </main>
