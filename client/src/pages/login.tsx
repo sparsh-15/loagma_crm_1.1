@@ -26,7 +26,7 @@ export default function Login() {
       login(user);
       toast({
         title: 'Login successful',
-        description: `Welcome back, ${user.name}!`,
+        description: `Welcome back, ${user.name || user.username}!`,
       });
       setTimeout(() => setLocation('/dashboard'), 0);
     },

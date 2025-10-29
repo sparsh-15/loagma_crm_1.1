@@ -79,7 +79,7 @@ export default function Dashboard() {
       title: 'Total Leads',
       value: metrics?.totalLeads || 0,
       icon: UserPlus,
-      visible: canViewMetric('leads'),
+      visible: user.role === 'admin' || user.role === 'manager' || user.role === 'exec',
       color: 'text-blue-600 dark:text-blue-400',
       bgColor: 'bg-blue-100 dark:bg-blue-950',
     },
@@ -87,7 +87,7 @@ export default function Dashboard() {
       title: 'Total Clients',
       value: metrics?.totalClients || 0,
       icon: Users,
-      visible: canViewMetric('clients'),
+      visible: user.role === 'admin' || user.role === 'manager' || user.role === 'exec',
       color: 'text-green-600 dark:text-green-400',
       bgColor: 'bg-green-100 dark:bg-green-950',
     },
@@ -95,7 +95,7 @@ export default function Dashboard() {
       title: 'Total Quotations',
       value: metrics?.totalQuotations || 0,
       icon: FileText,
-      visible: canViewMetric('quotations'),
+      visible: user.role === 'admin' || user.role === 'manager' || user.role === 'exec' || user.role === 'accountant',
       color: 'text-purple-600 dark:text-purple-400',
       bgColor: 'bg-purple-100 dark:bg-purple-950',
     },
@@ -103,7 +103,7 @@ export default function Dashboard() {
       title: 'Total Revenue',
       value: formatCurrency(metrics?.totalRevenue || 0),
       icon: DollarSign,
-      visible: canViewMetric('revenue') || user?.role === 'admin',
+      visible: user.role === 'admin' || user.role === 'accountant',
       color: 'text-emerald-600 dark:text-emerald-400',
       bgColor: 'bg-emerald-100 dark:bg-emerald-950',
     },
@@ -111,7 +111,7 @@ export default function Dashboard() {
       title: 'Pending Payments',
       value: formatCurrency(metrics?.pendingPayments || 0),
       icon: Clock,
-      visible: canViewMetric('revenue') || user?.role === 'admin',
+      visible: user.role === 'admin' || user.role === 'accountant',
       color: 'text-amber-600 dark:text-amber-400',
       bgColor: 'bg-amber-100 dark:bg-amber-950',
     },
@@ -159,6 +159,12 @@ export default function Dashboard() {
     ],
   } : null;
 
+  if (!user) {
+    return <div className="flex items-center justify-center h-screen">
+      <p>Loading...</p>
+    </div>;
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -166,7 +172,7 @@ export default function Dashboard() {
           Dashboard
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Welcome back, {user?.name}
+          Welcome back, {user.name || user.username || 'User'}
         </p>
       </div>
 
