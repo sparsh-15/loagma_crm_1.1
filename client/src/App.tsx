@@ -88,14 +88,20 @@ function Router() {
 }
 
 export default function App() {
+  console.log("=== APP COMPONENT RENDERING ===");
+  
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+    <div style={{ padding: '20px', background: '#000', color: '#fff', minHeight: '100vh' }}>
+      <h1 style={{ fontSize: '48px', marginBottom: '20px' }}>CRM LOADING TEST</h1>
+      <p style={{ fontSize: '24px' }}>If you can see this, React is working!</p>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </div>
   );
 }
