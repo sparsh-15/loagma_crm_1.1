@@ -49,21 +49,11 @@ export default function Dashboard() {
     queryKey: ['/api/dashboard/activities'],
   });
 
-  const canViewMetric = (metric: string) => {
-    if (!user) return false;
-    
-    if (user.role === 'admin') return true;
-    
-    const permissions: Record<string, string[]> = {
-      leads: ['manager', 'exec'],
-      clients: ['manager', 'exec'],
-      quotations: ['manager', 'exec', 'accountant'],
-      revenue: ['accountant'],
-      tickets: ['engineer'],
-    };
-    
-    return permissions[metric]?.includes(user.role) || false;
-  };
+  if (!user) {
+    return <div className="flex items-center justify-center h-screen">
+      <p>Loading...</p>
+    </div>;
+  }
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -158,12 +148,6 @@ export default function Dashboard() {
       },
     ],
   } : null;
-
-  if (!user) {
-    return <div className="flex items-center justify-center h-screen">
-      <p>Loading...</p>
-    </div>;
-  }
 
   return (
     <div className="space-y-6">
