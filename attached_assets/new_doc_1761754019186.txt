@@ -1,0 +1,547 @@
+# CRM + Accounting Management System - Demo Application
+
+Create a full-stack web application that manages leads, clients, quotations, invoices, and service tickets with role-based access control.
+
+## TECHNOLOGY STACK
+
+- **Frontend**: React with Tailwind CSS
+- **Backend**: Node.js with Express
+- **Authentication**: Basic session-based auth (username/password)
+- **Data Storage**: In-memory JavaScript arrays (no database required)
+- **Charts**: Chart.js for analytics dashboard
+- **Routing**: React Router for navigation
+
+## USER ROLES & DEMO CREDENTIALS
+
+Create 6 user roles with these credentials:
+
+1. **admin** / admin123 (Administrator - Full access)
+2. **manager** / manager123 (Sales Manager)
+3. **exec** / exec123 (Sales Executive)
+4. **accountant** / acc123 (Accountant)
+5. **engineer** / eng123 (Engineer)
+6. **client** / client123 (Client)
+
+## FEATURE REQUIREMENTS
+
+### 1. AUTHENTICATION SYSTEM
+- Login page with username and password fields
+- Session-based authentication (store logged-in user in state/context)
+- Logout functionality
+- Redirect to dashboard after successful login
+- Protected routes based on user role
+
+### 2. DASHBOARD (Role-based views)
+
+**Summary Cards Display:**
+- Total Leads (with count)
+- Total Clients (with count)
+- Total Quotations (with count)
+- Total Revenue (sum of paid invoices)
+- Pending Payments (sum of unpaid invoices)
+
+**Charts:**
+- Pie Chart: Lead Status Distribution (New, In Progress, Converted, Lost)
+- Line Chart: Monthly Revenue Trend (last 6 months)
+- Bar Chart: Quotation Status Breakdown (Draft, Pending, Approved, Rejected)
+
+**Recent Activities:**
+- Show last 10 activities (lead created, quotation approved, invoice paid, etc.)
+- Display: timestamp, user, action, entity
+
+**Role-based Dashboard Access:**
+- Admin: All metrics and charts
+- Sales Manager: Leads, Clients, Quotations metrics
+- Sales Executive: Only assigned leads and quotations
+- Accountant: Revenue, Invoices, Payments
+- Engineer: Assigned tickets only
+- Client: Own quotations and invoices
+
+### 3. LEAD MANAGEMENT
+
+**Lead List Page:**
+- Display all leads in a table with columns: Name, Company, Email, Phone, Status, Assigned To, Created Date
+- Status badges with colors (New: blue, In Progress: yellow, Converted: green, Lost: red)
+- Search by name or company
+- Filter by status and assigned user
+- Actions: View, Edit, Delete, Convert to Client
+
+**Add/Edit Lead Form:**
+- Fields: Name*, Email*, Phone*, Company*, Source (dropdown: Website, Referral, Cold Call, Social Media)
+- Status dropdown: New, In Progress, Converted, Lost
+- Assign to (dropdown of Sales Executives)
+- Notes (textarea)
+- Validation: Required fields, valid email format, phone number format
+
+**Lead Detail Page:**
+- Display all lead information
+- Show follow-up notes with timestamps
+- Add new note functionality
+- Activity timeline
+- "Convert to Client" button (creates client record and updates lead status)
+
+**Data Structure:**
+```javascript
+{
+  id: 1,
+  name: "John Doe",
+  email: "john@company.com",
+  phone: "+1234567890",
+  company: "ABC Corp",
+  source: "Website",
+  status: "In Progress",
+  assignedTo: "exec",
+  assignedToName: "Sales Executive",
+  createdDate: "2025-01-15",
+  notes: [
+    { text: "Initial contact made", timestamp: "2025-01-15 10:30", user: "exec" }
+  ],
+  convertedToClientId: null
+}
+```
+
+### 4. CLIENT MANAGEMENT
+
+**Client List Page:**
+- Display clients in a grid or table: Name, Company, Email, Phone, Total Revenue, Created Date
+- Search by name or company
+- View client details button
+
+**Client Detail Page:**
+- Client information section
+- Transaction history: List of quotations and invoices
+- Total revenue (sum of paid invoices)
+- Service tickets related to this client
+- Quick actions: Create Quotation, Create Ticket
+
+**Data Structure:**
+```javascript
+{
+  id: 1,
+  name: "John Doe",
+  email: "john@company.com",
+  phone: "+1234567890",
+  company: "ABC Corp",
+  address: "123 Business St, City",
+  createdDate: "2025-01-20",
+  totalRevenue: 15000,
+  leadId: 1
+}
+```
+
+### 5. QUOTATION MANAGEMENT
+
+**Quotation List Page:**
+- Table with: Quotation #, Client, Date, Amount, Status, Created By
+- Status badges: Draft (gray), Pending Approval (yellow), Approved (green), Rejected (red)
+- Filter by status
+- Actions: View, Edit (if Draft), Approve (if Manager), Delete (if Draft)
+
+**Create Quotation Form:**
+- Select Client (dropdown)
+- Add line items dynamically:
+  * Description (text)
+  * Quantity (number)
+  * Unit Price (number)
+  * Amount (auto-calculated: quantity × unit price)
+- Subtotal (auto-calculated sum of all items)
+- Tax Rate: 18% (auto-calculated)
+- Total Amount (Subtotal + Tax)
+- Valid Until Date
+- Notes/Terms (textarea)
+- Save as Draft or Submit for Approval button
+
+**Quotation Detail Page:**
+- Professional invoice-like layout
+- Client details at top
+- Line items table
+- Subtotal, Tax, Total clearly displayed
+- Status and dates
+- Action buttons based on role and status:
+  * Sales Executive: Edit (if Draft), Submit for Approval
+  * Sales Manager: Approve, Reject (if Pending)
+  * Accountant: Generate Invoice (if Approved)
+
+**Data Structure:**
+```javascript
+{
+  id: 1,
+  quotationNumber: "QT-2025-001",
+  clientId: 1,
+  clientName: "ABC Corp",
+  items: [
+    { description: "Web Development", quantity: 1, unitPrice: 5000, amount: 5000 },
+    { description: "SEO Services", quantity: 3, unitPrice: 1000, amount: 3000 }
+  ],
+  subtotal: 8000,
+  taxRate: 18,
+  taxAmount: 1440,
+  total: 9440,
+  status: "Approved",
+  createdBy: "exec",
+  createdByName: "Sales Executive",
+  createdDate: "2025-01-25",
+  validUntil: "2025-02-25",
+  approvedBy: "manager",
+  approvedDate: "2025-01-26",
+  notes: "Standard terms apply"
+}
+```
+
+### 6. INVOICE MANAGEMENT
+
+**Invoice List Page:**
+- Table: Invoice #, Client, Date, Due Date, Amount, Paid Amount, Status
+- Status badges: Generated (blue), Sent (yellow), Paid (green), Overdue (red)
+- Filter by status and date range
+- Actions: View, Record Payment, Send Reminder
+
+**Generate Invoice from Quotation:**
+- Pre-populate all data from approved quotation
+- Set due date (default: 30 days from today)
+- Invoice number auto-generated: INV-YYYY-###
+- Save as "Generated" status
+
+**Invoice Detail Page:**
+- Professional invoice layout with invoice number
+- "INVOICE" header
+- Bill To: Client details
+- Invoice Date, Due Date
+- Line items table (from quotation)
+- Payment information section (if paid)
+- Action buttons:
+  * Mark as Sent
+  * Record Payment (opens modal)
+  * Download PDF (mock - just show alert)
+
+**Record Payment Modal:**
+- Payment Date (date picker)
+- Payment Amount (number - can be partial)
+- Payment Method (dropdown: Cash, Check, Bank Transfer, Credit Card, UPI)
+- Transaction Reference (text)
+- Notes (textarea)
+- On submit: Update invoice status to "Paid" (or "Partially Paid"), update paidAmount
+
+**Data Structure:**
+```javascript
+{
+  id: 1,
+  invoiceNumber: "INV-2025-001",
+  quotationId: 1,
+  clientId: 1,
+  clientName: "ABC Corp",
+  clientAddress: "123 Business St",
+  items: [...], // same as quotation
+  subtotal: 8000,
+  taxAmount: 1440,
+  total: 9440,
+  status: "Paid",
+  generatedDate: "2025-01-27",
+  sentDate: "2025-01-27",
+  dueDate: "2025-02-27",
+  paidDate: "2025-02-15",
+  paidAmount: 9440,
+  paymentMethod: "Bank Transfer",
+  transactionRef: "TXN123456",
+  notes: ""
+}
+```
+
+### 7. SERVICE TICKET SYSTEM
+
+**Ticket List Page:**
+- Table: Ticket #, Client, Title, Priority, Status, Assigned To, Created Date
+- Priority badges: Low (gray), Medium (yellow), High (orange), Critical (red)
+- Status badges: Open (blue), In Progress (yellow), Resolved (green), Closed (gray)
+- Filter by status, priority, assigned engineer
+- Actions: View, Edit, Assign
+
+**Create Ticket Form:**
+- Select Client (dropdown)
+- Title* (text)
+- Description* (textarea)
+- Priority (dropdown: Low, Medium, High, Critical)
+- Assign to Engineer (dropdown)
+- Status (auto-set to "Open")
+
+**Ticket Detail Page:**
+- Ticket information section
+- Client details
+- Current status and priority
+- Assigned engineer
+- Activity/Notes timeline:
+  * Show all updates with timestamps
+  * Add new note/update
+  * Update status dropdown
+- Action buttons:
+  * Update Status
+  * Reassign Engineer
+  * Add Note
+  * Close Ticket
+
+**Data Structure:**
+```javascript
+{
+  id: 1,
+  ticketNumber: "TKT-2025-001",
+  clientId: 1,
+  clientName: "ABC Corp",
+  title: "Server Setup Required",
+  description: "Need server configuration and deployment",
+  priority: "High",
+  status: "In Progress",
+  assignedTo: "engineer",
+  assignedToName: "Engineer",
+  createdDate: "2025-02-01",
+  createdBy: "admin",
+  notes: [
+    { text: "Ticket created", timestamp: "2025-02-01 09:00", user: "admin" },
+    { text: "Started working on setup", timestamp: "2025-02-01 14:30", user: "engineer" }
+  ],
+  resolvedDate: null,
+  closedDate: null
+}
+```
+
+## LAYOUT & NAVIGATION
+
+### Sidebar Navigation (Role-based menu items)
+**Admin:**
+- Dashboard
+- Leads
+- Clients
+- Quotations
+- Invoices
+- Service Tickets
+- Users (optional)
+
+**Sales Manager:**
+- Dashboard
+- Leads
+- Clients
+- Quotations
+- Reports
+
+**Sales Executive:**
+- Dashboard
+- My Leads
+- Clients
+- Quotations
+
+**Accountant:**
+- Dashboard
+- Quotations (Approved only)
+- Invoices
+- Payments
+- Reports
+
+**Engineer:**
+- Dashboard
+- My Tickets
+
+**Client:**
+- Dashboard
+- My Quotations
+- My Invoices
+- My Tickets
+
+### Top Navbar
+- Logo/App Name on left
+- User name and role in center/right
+- Logout button on right
+
+## UI/UX REQUIREMENTS
+
+1. **Design System:**
+   - Use Tailwind CSS utility classes
+   - Color scheme: Primary (blue-600), Success (green-600), Warning (yellow-500), Danger (red-600)
+   - Consistent spacing (p-4, p-6, m-4, etc.)
+   - Card-based layouts with shadow and rounded corners
+
+2. **Components:**
+   - Status badges with appropriate colors
+   - Data tables with hover effects
+   - Modal dialogs for forms (especially smaller forms)
+   - Buttons with loading states
+   - Toast notifications for success/error messages
+   - Dropdown menus with search (for client/user selection)
+
+3. **Responsiveness:**
+   - Mobile-friendly sidebar (hamburger menu on small screens)
+   - Responsive tables (horizontal scroll on mobile)
+   - Stack cards vertically on mobile
+
+4. **User Feedback:**
+   - Show loading spinner during actions
+   - Success message after create/update/delete
+   - Confirmation dialog for delete actions
+   - Form validation with error messages
+   - Disable buttons during processing
+
+## SAMPLE DATA
+
+Pre-populate with:
+- **10 Leads** (mix of all statuses, assigned to different executives)
+- **5 Clients** (converted from leads)
+- **8 Quotations** (2 Draft, 2 Pending, 3 Approved, 1 Rejected)
+- **5 Invoices** (2 Generated, 1 Sent, 2 Paid)
+- **6 Tickets** (1 Open, 2 In Progress, 2 Resolved, 1 Closed)
+- **Activity logs** for all entities
+
+## TECHNICAL IMPLEMENTATION
+
+### File Structure:
+```
+/src
+  /components
+    /auth
+      Login.jsx
+      ProtectedRoute.jsx
+    /layout
+      Sidebar.jsx
+      Navbar.jsx
+      Layout.jsx
+    /dashboard
+      Dashboard.jsx
+      DashboardCard.jsx
+      RecentActivities.jsx
+      Charts.jsx
+    /leads
+      LeadList.jsx
+      LeadForm.jsx
+      LeadDetail.jsx
+    /clients
+      ClientList.jsx
+      ClientDetail.jsx
+    /quotations
+      QuotationList.jsx
+      QuotationForm.jsx
+      QuotationDetail.jsx
+    /invoices
+      InvoiceList.jsx
+      InvoiceForm.jsx
+      InvoiceDetail.jsx
+      PaymentModal.jsx
+    /tickets
+      TicketList.jsx
+      TicketForm.jsx
+      TicketDetail.jsx
+    /common
+      Table.jsx
+      StatusBadge.jsx
+      Modal.jsx
+      Button.jsx
+      Card.jsx
+  /context
+    AuthContext.jsx
+    DataContext.jsx
+  /data
+    dummyData.js (all sample data)
+  /utils
+    helpers.js (date formatting, calculations, etc.)
+  App.jsx
+  index.jsx
+```
+
+### State Management:
+- Use React Context for authentication
+- Use React Context or props for data (leads, clients, quotations, invoices, tickets)
+- Generate unique IDs using: `Date.now()` or simple counter
+
+### Key Functions to Implement:
+```javascript
+// Auto-generate numbers
+generateQuotationNumber() // QT-YYYY-###
+generateInvoiceNumber()   // INV-YYYY-###
+generateTicketNumber()    // TKT-YYYY-###
+
+// Calculations
+calculateQuotationTotal(items, taxRate)
+calculateRevenue(invoices)
+getLeadConversionRate(leads)
+
+// Status updates
+updateLeadStatus(leadId, newStatus)
+approveQuotation(quotationId, approverId)
+recordPayment(invoiceId, paymentData)
+updateTicketStatus(ticketId, newStatus)
+
+// Conversions
+convertLeadToClient(leadId)
+generateInvoiceFromQuotation(quotationId)
+
+// Activity logging
+logActivity(action, entity, userId)
+```
+
+## VALIDATION RULES
+
+1. **Email**: Must be valid email format
+2. **Phone**: Should contain only numbers and basic formatting
+3. **Required Fields**: Show error if empty
+4. **Quotation Items**: At least 1 item required, quantity and price must be positive
+5. **Payment Amount**: Cannot exceed invoice total
+6. **Status Transitions**: 
+   - Lead: Can't go from Lost back to other statuses
+   - Quotation: Can't edit after approval
+   - Invoice: Can't delete if paid
+
+## ROLE-BASED ACCESS CONTROL
+
+Implement these access rules:
+
+1. **Sales Executive**:
+   - Can only see and edit leads assigned to them
+   - Can create quotations
+   - Cannot approve quotations
+
+2. **Sales Manager**:
+   - Can see all leads
+   - Can approve/reject quotations
+   - Cannot generate invoices
+
+3. **Accountant**:
+   - Can only see approved quotations
+   - Can generate and manage invoices
+   - Can record payments
+   - Cannot create or edit leads
+
+4. **Engineer**:
+   - Can only see tickets assigned to them
+   - Can update ticket status and add notes
+   - Cannot see financial data
+
+5. **Client**:
+   - Can only see their own quotations, invoices, and tickets
+   - Read-only access
+   - Can create support tickets
+
+6. **Admin**:
+   - Full access to everything
+
+## SUCCESS CRITERIA
+
+The demo is complete when:
+1. ✅ All 6 roles can login successfully
+2. ✅ Complete workflow works: Lead → Client → Quotation → Approval → Invoice → Payment
+3. ✅ Dashboard shows accurate metrics and working charts
+4. ✅ All CRUD operations work for each module
+5. ✅ Role-based access is properly enforced
+6. ✅ UI is clean, professional, and responsive
+7. ✅ No console errors
+8. ✅ All forms have proper validation
+9. ✅ Status badges display correctly with colors
+10. ✅ Sample data is pre-loaded and realistic
+
+## NOTES
+
+- Focus on functionality over fancy animations
+- Keep code clean and well-organized
+- Use mock delays (`setTimeout`) to simulate API calls if desired
+- Add comments for complex logic
+- Ensure smooth navigation between pages
+- Make it feel like a real production application
+
+## DELIVERABLE
+
+A fully functional, deployed demo application on Repl.it that can be shared via URL and demonstrates all features of the CRM + Accounting Management System.
