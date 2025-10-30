@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "prebuild": "echo 'Running prebuild tasks...'",
+    "prebuild": "echo 'Running prebuild tasks...'"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
