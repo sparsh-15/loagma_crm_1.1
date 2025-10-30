@@ -3,5 +3,11 @@
   "buildCommand": "cd client && npm install && npm run prebuild && NODE_ENV=production npm run build",
   "outputDirectory": "client/dist",
   "installCommand": "echo 'Skipping root install'",
-  "framework": "vite"
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
