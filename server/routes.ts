@@ -5,6 +5,11 @@ import type { InsertLead, InsertClient, InsertQuotation, InsertInvoice, InsertTi
 import bcrypt from "bcrypt";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint for deployment platforms (Render, Railway, etc.)
+  app.get('/api/auth/check', async (req, res) => {
+    res.status(200).json({ status: 'ok', message: 'Server is running' });
+  });
+
   // Authentication
   app.post('/api/auth/login', async (req, res) => {
     try {

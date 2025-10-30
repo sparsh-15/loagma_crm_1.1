@@ -38,7 +38,7 @@ A comprehensive CRM and Accounting Management System with role-based access cont
 - Node.js 18+ 
 - npm 9+
 
-### Installation
+### Installation & Local Development
 
 ```bash
 # Clone the repository (if downloading from Git)
@@ -48,11 +48,19 @@ cd crm-accounting
 # Install dependencies
 npm install
 
-# Start development server
+# Start development server (frontend + backend together)
 npm run dev
 ```
 
 The application will be available at: `http://localhost:5000`
+
+### Separate Deployment (Production)
+
+**Want to deploy frontend and backend separately?**
+
+See **`QUICK_START.md`** for 5-minute deployment to Vercel (frontend) + Render (backend)!
+
+Or see **`SEPARATE_DEPLOYMENT.md`** for detailed step-by-step guide.
 
 ---
 
