@@ -7,7 +7,9 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
-      "@shared": path.resolve(__dirname, "..", "shared"),
+      // For production builds (Vercel), shared is copied to src/shared by prebuild script
+      // For local dev, it points to ../shared
+      "@shared": path.resolve(__dirname, process.env.NODE_ENV === 'production' ? 'src/shared' : '..', process.env.NODE_ENV === 'production' ? '' : 'shared'),
       "@assets": path.resolve(__dirname, "..", "attached_assets"),
     },
   },
