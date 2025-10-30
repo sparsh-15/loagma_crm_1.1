@@ -10,6 +10,24 @@ This guide gets you up and running with separate frontend and backend deployment
 - Vercel account (free - sign up at vercel.com)
 - Render account (free - sign up at render.com)
 
+## 📦 Important: Separate Package Files
+
+Your project has **two package.json files** for optimized deployments:
+
+```
+project-root/
+├── client/                    ← Frontend (Vercel)
+│   ├── package.json          ← Frontend deps only (~200MB)
+│   ├── vite.config.ts        ← Vite config
+│   ├── tailwind.config.ts    ← Styling config
+│   └── src/                  ← React app
+├── shared/                    ← Shared types
+└── package.json              ← Backend + local dev (~500MB)
+```
+
+**Vercel** uses `client/package.json` → Fast builds!  
+**Render** uses root `package.json` → Backend ready!
+
 ---
 
 ## ⚡ 5-Minute Setup

@@ -18,9 +18,17 @@ Your CRM application is now configured for **separate frontend and backend deplo
 - ✅ Properly handles absolute URLs for separate deployments
 
 ### 3. Configuration Files Created
-- ✅ `client/package.json` - **Separate frontend dependencies (React, Vite, UI libraries)**
-- ✅ `.env.example` - Backend environment variables template
+
+**Frontend (client/) - Separate Build Configs:**
+- ✅ `client/package.json` - Frontend dependencies only (React, Vite, UI libraries)
+- ✅ `client/vite.config.ts` - Vite configuration for frontend builds
+- ✅ `client/tailwind.config.ts` - Tailwind CSS configuration
+- ✅ `client/postcss.config.js` - PostCSS configuration
+- ✅ `client/tsconfig.json` - TypeScript configuration
 - ✅ `client/.env.example` - Frontend environment variables template
+
+**Backend & Deployment:**
+- ✅ `.env.example` - Backend environment variables template
 - ✅ `vercel.json` - Vercel deployment configuration
 - ✅ `render.yaml` - Render deployment configuration
 - ✅ `netlify.toml` - Netlify deployment configuration (alternative)
