@@ -18,6 +18,7 @@ Your CRM application is now configured for **separate frontend and backend deplo
 - ✅ Properly handles absolute URLs for separate deployments
 
 ### 3. Configuration Files Created
+- ✅ `client/package.json` - **Separate frontend dependencies (React, Vite, UI libraries)**
 - ✅ `.env.example` - Backend environment variables template
 - ✅ `client/.env.example` - Frontend environment variables template
 - ✅ `vercel.json` - Vercel deployment configuration

@@ -59,6 +59,7 @@ git push -u origin main
    - Root Directory: `client`
    - Build Command: `npm run build`
    - Output Directory: `dist`
+   - **Note**: Vercel will automatically detect `client/package.json` with only frontend dependencies!
 4. Environment variable:
    ```
    VITE_API_URL = https://your-backend.onrender.com
